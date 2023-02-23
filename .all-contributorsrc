@@ -6,6 +6,36 @@
   "commit": false,
   "contributors": [
     {
+      "login": "0dayCTF",
+      "name": "Ryan Montgomery",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44453666?v=4",
+      "profile": "http://ryanmontgomery.me",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
+      "login": "briskets",
+      "name": "Chris Wild",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58673953?v=4",
+      "profile": "https://briskets.io",
+      "contributions": [
+        "projectManagement",
+        "tool",
+        "infra",
+        "design"
+      ]
+    },
+    {
+      "login": "Papadope",
+      "name": "Chris Papadopoulos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28659477?v=4",
+      "profile": "https://papadope.net/",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
       "login": "AlanFoster",
       "name": "Alan Foster",
       "avatar_url": "https://avatars.githubusercontent.com/u/1271782?v=4",
@@ -24,15 +54,6 @@
       ]
     },
     {
-      "login": "briskets",
-      "name": "briskets",
-      "avatar_url": "https://avatars.githubusercontent.com/u/58673953?v=4",
-      "profile": "https://briskets.io",
-      "contributions": [
-        "projectManagement"
-      ]
-    },
-    {
       "login": "0x03f3",
       "name": "Joseph Rose",
       "avatar_url": "https://avatars.githubusercontent.com/u/24409121?v=4",
@@ -42,10 +63,10 @@
       ]
     },
     {
-      "login": "JabbaCS",
+      "login": "JabbaSec",
       "name": "Jabba",
       "avatar_url": "https://avatars.githubusercontent.com/u/68778279?v=4",
-      "profile": "https://github.com/JabbaCS",
+      "profile": "https://github.com/JabbaSec",
       "contributions": [
         "data"
       ]
@@ -60,29 +81,76 @@
       ]
     },
     {
-      "login": "Papadope",
-      "name": "Chris Papadopoulos",
-      "avatar_url": "https://avatars.githubusercontent.com/u/28659477?v=4",
-      "profile": "https://papadope.net/",
-      "contributions": [
-        "design"
-      ]
-    },
-    {
-      "login": "0dayCTF",
-      "name": "Ryan Montgomery",
-      "avatar_url": "https://avatars.githubusercontent.com/u/44453666?v=4",
-      "profile": "http://ryanmontgomery.me",
-      "contributions": [
-        "review"
-      ]
-    },
-    {
       "login": "H0j3n",
       "name": "Muhammad Ali",
       "avatar_url": "https://avatars.githubusercontent.com/u/51261763?v=4",
       "profile": "https://h0j3n.github.io/",
       "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "edrapac",
+      "name": "edrapac",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33971688?v=4",
+      "profile": "http://sprucelab.site",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "epi052",
+      "name": "epi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43392618?v=4",
+      "profile": "https://epi052.gitlab.io/notes-to-self/",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "bee-san",
+      "name": "Brandon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10378052?v=4",
+      "profile": "https://skerritt.blog",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "robiot",
+      "name": "Robiot",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68228472?v=4",
+      "profile": "https://robiot.github.io/",
+      "contributions": [
+        "content",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Hydragyrum",
+      "name": "Adam Bertrand",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4928181?v=4",
+      "profile": "https://github.com/Hydragyrum",
+      "contributions": [
+        "content"
+      ]
+    },
+    {
+      "login": "rohitkumarankam",
+      "name": "Rohit Kumar Ankam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/70012972?v=4",
+      "profile": "http://rohitkumarankam.com",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "t3l3machus",
+      "name": "Panagiotis Chartas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/75489922?v=4",
+      "profile": "https://github.com/t3l3machus",
+      "contributions": [
+        "infra",
         "tool"
       ]
     }
@@ -92,5 +160,6 @@
   "projectOwner": "0dayCTF",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }

@@ -10,29 +10,33 @@
     <script src="assets/jquery-3.5.1.slim.min.js"></script>
     <script src="assets/popper-1.16.1.min.js"></script>
     <script src="assets/bootstrap-4.5.2.min.js"></script>
-    <link rel="stylesheet" href="css/dark-mode.min.css">
-    <link rel="stylesheet" href="css/light-mode.min.css">
-    <meta name="description" content="Online Rev Shell generator with Local Storage functionality, URI & Base64 Encoding, and Raw Mode. Great for CTFs." />
+    <script src="assets/axios.min.js"></script>
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/light-mode.css">
+    <link rel="stylesheet" href="css/meme-mode.css">
+    <meta name="description" content="Online Reverse Shell generator with Local Storage functionality, URI & Base64 Encoding, MSFVenom Generator, and Raw Mode. Great for CTFs." />
     <meta name="title" content="Online - Reverse Shell Generator">
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.revshells.com/">
     <meta property="og:title" content="Online - Reverse Shell Generator">
-    <meta property="og:description" content="Reverse Shell generator with a ton of functionality.">
+    <meta property="og:description" content="Online Reverse Shell generator with Local Storage functionality, URI & Base64 Encoding, MSFVenom Generator, and Raw Mode. Great for CTFs.">
     <meta property="og:image"
         content="https://user-images.githubusercontent.com/58673953/111243529-9d646f80-85d7-11eb-986c-9842747dc2e7.png">
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.revshells.com/">
     <meta property="twitter:title" content="Online - Reverse Shell Generator">
-    <meta property="twitter:description" content="Reverse Shell generator with a ton of functionality.">
+    <meta property="twitter:description" content="Online Reverse Shell generator with Local Storage functionality, URI & Base64 Encoding, MSFVenom Generator, and Raw Mode. Great for CTFs.">
     <meta property="twitter:image"
         content="https://user-images.githubusercontent.com/58673953/111243529-9d646f80-85d7-11eb-986c-9842747dc2e7.png">
+
+    <link rel="canonical" href="https://revshells.com" />
 
     <!-- GitHub Ribbon -->
     <a href="https://github.com/0dayCTF/reverse-shell-generator" class="github-corner"
         aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250"
-            style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+            style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
             <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
             <path
                 d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
@@ -42,53 +46,25 @@
                 fill="currentColor" class="octo-body"></path>
         </svg></a>
     <style>
-        .github-corner:hover .octo-arm {
-            animation: octocat-wave 560ms ease-in-out
-        }
-
-        @keyframes octocat-wave {
-
-            0%,
-            100% {
-                transform: rotate(0)
-            }
-
-            20%,
-            60% {
-                transform: rotate(-25deg)
-            }
-
-            40%,
-            80% {
-                transform: rotate(10deg)
-            }
-        }
-
-        @media (max-width:500px) {
-            .github-corner:hover .octo-arm {
-                animation: none
-            }
-
-            .github-corner .octo-arm {
-                animation: octocat-wave 560ms ease-in-out
-            }
-        }
     </style>
 </head>
 
 <body class="bg-black">
     <div class="container d-flex flex-column vh-100">
-        <div class="custom-control custom-switch float-right">
-            <input id="lightSwitch" type="checkbox" class="custom-control-input">
-            <label for="lightSwitch" class="custom-control-label small pr-2 pb-1" style="padding-top:2px"
-                data-toggle="tooltip" title="Toggle Light Mode">Light Mode 🌓
-            </label>
+        <div class="custom-control float-right" style="margin-left: -25px;">
+            <label for="theme-selector" class="card-title col-auto col-form-label float-left"
+                style="font-size:1rem">Theme</label>
+
+            <select class="custom-select" id="theme-selector">
+                <option class="os-item" value="dark">Dark</option>
+                <option class="os-item" value="light">Light</option>
+                <option class="os-item" value="meme">Meme</option>
+            </select>
         </div>
 
         <!-- Header -->
-        <div class="mb-auto row justify-content-center mt-3 mb-5">
+        <div class="mb-auto row justify-content-center mb-5">
             <h2 class="rainbow">Reverse Shell Generator</h2>
-
         </div>
 
         <div class="row">
@@ -173,7 +149,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-auto position-relative" style="min-width: 15vw">
                                     <pre class="prompt-sign">🚀</pre>
-                                    <pre id="listener-command" class="bg-dark border text-wrap text-break p-4 pl-5 mb-2"
+                                    <pre id="listener-command" class="bg-dark border text-wrap text-break p-4 pl-5 mb-2" spellcheck="false"
                                         style="outline: none; font-size:1em;" contenteditable="true"></pre>
                                 </div>
                             </div>
@@ -216,6 +192,10 @@
                 <a class="nav-link" id="msfvenom-tab" data-toggle="tab" href="#msfvenom" role="tab"
                     aria-controls="msfvenom" aria-selected="false">MSFVenom</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="hoaxshell-tab" data-toggle="tab" href="#hoaxshell" role="tab"
+                    aria-controls="msfvenom" aria-selected="false">HoaxShell</a>
+            </li>
             <!-- <li class="nav-item">
                 <a class="nav-link disabled" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
                     aria-controls="settings" aria-selected="false" aria-disabled="true">Settings</a>
@@ -235,6 +215,7 @@
                                 style="padding-top:2px" data-toggle="tooltip" title="Display all advanced settings">
                                 Show Advanced
                             </label>
+                            <img src="assets/floppy-disk-solid.svg" class="download-svg" data-toggle="tooltip" title="Download Payload">
                         </div>
                         <!-- /Show all advanced switch -->
 
@@ -272,7 +253,7 @@
                                         <div class="col position-relative">
                                             <pre class="prompt-sign">🚀</pre>
                                             <pre id="reverse-shell-command"
-                                                class="bg-dark border pre-wrap text-break p-4 pl-5"
+                                                class="bg-dark border pre-wrap text-break p-4 pl-5" spellcheck="false"
                                                 style="outline: none; font-size:1em;" contenteditable="true"></pre>
                                         </div>
                                     </div>
@@ -299,8 +280,8 @@
                                                 <div class="col-auto">
                                                     <select id="encoding" class="custom-select">
                                                         <option value="None">None</option>
-                                                        <option value="encodingURI">encodeURI</option>
-                                                        <option value="encodeURIComponent">encodeURIComponent</option>
+                                                        <option value="encodeURL">URL Encode</option>
+                                                        <option value="encodeURLDouble">Double URL Encode</option>
                                                         <option value="Base64">Base64</option>
                                                     </select>
                                                 </div>
@@ -333,6 +314,7 @@
                                             <label for="auto-copy-switch" class="custom-control-label small pr-2 pb-1"
                                                 style="padding-top: 2px">Auto-copy</label>
                                         </div> -->
+
                                         <!-- Raw button -->
                                         <button type="button" class="raw-listener btn btn-primary float-right mr-3"
                                                 data-toggle="tooltip" title="View raw">
@@ -362,6 +344,7 @@
             <div class="tab-pane" id="bind" role="tabpanel" aria-labelledby="bind-tab">
                 <div class="card shadow mb-5">
                     <div class="card-body">
+                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
                         <div class="card-text mt-4">
                             <div class="row">
                                 <!-- Left column: Bind selection -->
@@ -376,7 +359,7 @@
                                     <div class="row flex-grow-1">
                                         <div class="col position-relative">
                                             <pre class="prompt-sign">🚀</pre>
-                                            <pre id="bind-shell-command" class="bg-dark border pre-wrap text-break p-4 pl-5"
+                                            <pre id="bind-shell-command" class="bg-dark border pre-wrap text-break p-4 pl-5" spellcheck="false"
                                                 style="outline: none; font-size:1em;" contenteditable="true"></pre>
                                         </div>
                                     </div>
@@ -414,6 +397,7 @@
             <div class="tab-pane" id="msfvenom" role="tabpanel" aria-labelledby="msfvenom-tab">
                 <div class="card shadow mb-5">
                     <div class="card-body">
+                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
                         <div class="card-text mt-4">
                             <div class="row">
                                     <!-- Left column: MSFVenom selection -->
@@ -432,7 +416,7 @@
                                             <div class="col position-relative">
                                                 <pre class="prompt-sign">🚀</pre>
                                                 <pre id="msfvenom-command"
-                                                    class="bg-dark border pre-wrap text-break p-4 pl-5"
+                                                    class="bg-dark border pre-wrap text-break p-4 pl-5" spellcheck="false"
                                                     style="outline: none; font-size:1em;" contenteditable="true"></pre>
                                             </div>
                                         </div>
@@ -467,17 +451,61 @@
                         </div>
                     </div>
                 </div>
-                <!-- /MSFVenom Tab -->
+            </div>
+            <!-- /MSFVenom Tab -->
 
-        <script>
-            $(function () {
-                $('#myTab li:first-child a').tab('show')
-            })
-        </script>
-        <!-- /NEW -->
+            <!-- HoaxShell Tab -->
+            <div class="tab-pane" id="hoaxshell" role="tabpanel" aria-labelledby="hoaxshell-tab">
+                <div class="card shadow mb-5">
+                    <div class="card-body">
+                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
+                        <div class="card-text mt-4">
+                            <div class="row">
+                                    <!-- Left column: HoaxShell selection -->
+                                    <div class="col-12 col-md-3">
+                                        <div id="hoaxshell-selection" class="list-group overflow-auto"
+                                            style="max-height: 520px">
+                                            <!-- filled by init()-->
+                                        </div>
+                                    </div>
+
+                                    <!-- Right column -->
+                                    <div class="col-12 col-md-9 d-flex flex-column">
+
+                                        <!-- Command -->
+                                        <div class="row flex-grow-1">
+                                            <div class="col position-relative">
+                                                <pre class="prompt-sign">🚀</pre>
+                                                <pre id="hoaxshell-command"
+                                                    class="bg-dark border pre-wrap text-break p-4 pl-5" spellcheck="false"
+                                                    style="outline: none; font-size:1em;" contenteditable="true"></pre>
+                                            </div>
+                                        </div>
+
+                                        <div class="row justify-content-end mr-1">
+
+                                            <!-- Download button -->
+                                            <a href="https://github.com/t3l3machus/hoaxshell/tree/main/revshells" target="_blank"><button type="button" class="btn btn-primary float-right mr-3"
+                                                    data-toggle="tooltip" title="Download Listener">
+                                                Download Listener
+                                            </button></a>
+
+                                            <!-- Copy button -->
+                                            <button id="copy-hoaxshell-command" data-toggle="tooltip"
+                                                title="Copy to clipboard" type="button"
+                                                class="btn btn-primary float-right">
+                                                Copy
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /Right column -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /hoaxshell Tab -->
     </div>
-
-
 
     <!-- RSG data -->
     <script src="js/data.js"></script>
@@ -485,428 +513,11 @@
     <!-- RSG raw link generator -->
     <script src="js/raw-link.js"></script>
 
-    <!-- RSG logic -->
-    <script>
-        // Element selectors
-        const ipInput = document.querySelector("#ip");
-        const portInput = document.querySelector("#port");
-        const listenerSelect = document.querySelector("#listener-selection");
-        const shellSelect = document.querySelector("#shell");
-        // const autoCopySwitch = document.querySelector("#auto-copy-switch");
-        const encodingSelect = document.querySelector('#encoding');
-        const listenerCommand = document.querySelector("#listener-command");
-        const reverseShellCommand = document.querySelector("#reverse-shell-command");
-        const bindShellCommand = document.querySelector("#bind-shell-command");
-        const msfVenomCommand = document.querySelector("#msfvenom-command");
-
-        const FilterType = {
-            'All': 'all',
-            'Windows': 'windows',
-            'Linux': 'linux',
-            'Mac': 'mac'
-        };
-
-        document.querySelector("#os-options").addEventListener("change", (event) => {
-            const selectedOS = event.target.value;
-            rsg.setState({
-                filter: selectedOS,
-            });
-        });
-
-        document.querySelector("#reverse-tab").addEventListener("click", () => {
-            rsg.setState({
-                commandType: CommandType.ReverseShell
-            });
-        })
-
-        document.querySelector("#bind-tab").addEventListener("click", () => {
-            rsg.setState({
-                commandType: CommandType.BindShell
-            });
-        })
-
-        document.querySelector("#bind-tab").addEventListener("click", () => {
-            document.querySelector("#bind-shell-selection").innerHTML = "";
-            rsg.setState({
-                commandType: CommandType.BindShell
-            });
-        })
-
-        document.querySelector("#msfvenom-tab").addEventListener("click", () => {
-            document.querySelector("#msfvenom-selection").innerHTML = "";
-            rsg.setState({
-                commandType: CommandType.MSFVenom
-            });
-        });
-
-        var rawLinkButtons = document.querySelectorAll('.raw-listener');
-        for (const button of rawLinkButtons) {
-            button.addEventListener("click", () => {
-                const rawLink = RawLink.generate(rsg);
-                window.location = rawLink;
-            });
-        }
-
-        const filterCommandData = function (data, { commandType, filter }) {
-            return data.filter(item => {
-                if (!item.meta.includes(commandType)) {
-                    return false;
-                }
-
-                if (!filter) {
-                    return true;
-                }
-
-                if (filter === FilterType.All) {
-                    return true;
-                }
-
-                return item.meta.includes(filter);
-            });
-        }
-
-        const rsg = {
-            ip: localStorage.getItem('ip') || '10.10.10.10',
-            port: localStorage.getItem('port') || 9001,
-            shell: localStorage.getItem('shell') || rsgData.shells[0],
-            listener: localStorage.getItem('listener') || rsgData.listenerCommands[0][1],
-            encoding: localStorage.getItem('encoding') || 'None',
-            selectedValues: {
-                [CommandType.ReverseShell]: filterCommandData(rsgData.reverseShellCommands, { commandType: CommandType.ReverseShell })[0].name,
-                [CommandType.BindShell]: filterCommandData(rsgData.reverseShellCommands, { commandType: CommandType.BindShell })[0].name,
-                [CommandType.MSFVenom]: filterCommandData(rsgData.reverseShellCommands, { commandType: CommandType.MSFVenom })[0].name,
-            },
-            commandType: CommandType.ReverseShell,
-            filter: FilterType.All,
-
-            uiElements: {
-                [CommandType.ReverseShell]: {
-                    listSelection: '#reverse-shell-selection',
-                    command: '#reverse-shell-command'
-                },
-                [CommandType.BindShell]: {
-                    listSelection: '#bind-shell-selection',
-                    command: '#bind-shell-command',
-                },
-                [CommandType.MSFVenom]: {
-                    listSelection: '#msfvenom-selection',
-                    command: '#msfvenom-command'
-                }
-            },
-
-            copyToClipboard: (text) => {
-                if (navigator ?.clipboard ?.writeText) {
-                    navigator.clipboard.writeText(text)
-                    $('#clipboard-toast').toast('show')
-                } else if (window ?.clipboardData ?.setData) {
-                    window.clipboardData.setData('Text', text);
-                    $('#clipboard-toast').toast('show')
-                } else {
-                    $('#clipboard-failure-toast').toast('show')
-                }
-            },
-
-            escapeHTML: (text) => String(text).replace(/</, '&lt;').replace(/>/, '&gt;'),
-
-            getIP: () => rsg.ip,
-
-            getPort: () => Number(rsg.port),
-
-            getShell: () => rsg.shell,
-
-            getEncoding: () => rsg.encoding,
-
-            getSelectedCommandName: () => {
-                return rsg.selectedValues[rsg.commandType];
-            },
-
-            getReverseShellCommand: () => {
-                const reverseShellData = rsgData.reverseShellCommands.find((item) => item.name === rsg.getSelectedCommandName());
-                return reverseShellData.command;
-            },
-
-            generateReverseShellCommand: () => {
-                let command
-
-                if (rsg.getSelectedCommandName() === 'PowerShell #3 (Base64)') {
-                    const encoder = (text) => text;
-                    const payload = rsg.insertParameters(rsgData.specialCommands['PowerShell payload'], encoder)
-                    command = "powershell -e " + btoa(payload)
-                } else {
-                    command = rsg.getReverseShellCommand()
-                }
-
-                const encoding = rsg.getEncoding();
-                if (encoding === 'Base64') {
-                    command = btoa(command)
-                } else {
-                    function encoder(string) {
-                        return (encoding === 'encodeURI' || encoding === 'encodeURIComponent') ? window[
-                            encoding](string) : string
-                    }
-
-                    command = rsg.insertParameters(
-                        rsg.highlightParameters(
-                            encoder(command), encoder),
-                        encoder
-                    )
-                }
-
-                return command;
-            },
-
-            highlightParameters: (text, encoder) => {
-                const parameters = ['{ip}', '{port}', '{shell}', encodeURI('{ip}'), encodeURI('{port}'),
-                    encodeURI('{shell}')
-                ];
-
-                parameters.forEach((param) => {
-                    if (encoder) param = encoder(param)
-                    text = text.replace(param, `<span class="highlighted-parameter">${param}</span>`)
-                })
-                return text
-            },
-
-            init: () => {
-                rsg.initListenerSelection()
-                rsg.initShells()
-            },
-
-            initListenerSelection: () => {
-                rsgData.listenerCommands.forEach((listenerData, i) => {
-                    const type = listenerData[0];
-                    const command = listenerData[1];
-
-                    const option = document.createElement("option");
-
-                    option.value = command;
-                    option.selected = rsg.listener === option.value;
-                    option.classList.add("listener-option");
-                    option.innerText = type;
-
-                    listenerSelect.appendChild(option);
-                })
-            },
-
-            initShells: () => {
-                rsgData.shells.forEach((shell, i) => {
-                    const option = document.createElement("option");
-
-                    option.selected = rsg.shell === shell;
-                    option.classList.add("shell-option");
-                    option.innerText = shell;
-
-                    shellSelect.appendChild(option);
-                })
-            },
-
-            // Updates the rsg state, and forces a re-render
-            setState: (newState = {}) => {
-                Object.keys(newState).forEach((key) => {
-                    const value = newState[key];
-                    rsg[key] = value;
-                    localStorage.setItem(key, value)
-                });
-                Object.assign(rsg, newState);
-
-                rsg.update();
-            },
-
-            insertParameters: (command, encoder) => {
-                return command
-                    .replaceAll(encoder('{ip}'), rsg.escapeHTML(encoder(rsg.getIP())))
-                    .replaceAll(encoder('{port}'), encoder(String(rsg.getPort())))
-                    .replaceAll(encoder('{shell}'), encoder(rsg.getShell()))
-            },
-
-            update: () => {
-                rsg.updateListenerCommand()
-                rsg.updateTabList()
-                rsg.updateReverseShellCommand()
-                rsg.updateValues()
-            },
-
-            updateValues: () => {
-                const listenerOptions = listenerSelect.querySelectorAll(".listener-option");
-                listenerOptions.forEach((option)  => {
-                    option.selected = rsg.listener === option.value;
-                });
-
-                const shellOptions = shellSelect.querySelectorAll(".shell-option");
-                shellOptions.forEach((option) => {
-                    option.selected = rsg.shell === option.value;
-                });
-
-                const encodingOptions = encodingSelect.querySelectorAll("option");
-                encodingOptions.forEach((option) => {
-                    option.selected = rsg.encoding === option.value;
-                });
-
-                ipInput.value = rsg.ip;
-                portInput.value = rsg.port;
-            },
-
-            updateTabList: () => {
-                const data = rsgData.reverseShellCommands;
-                const filteredItems = filterCommandData(
-                    data,
-                    {
-                        filter: rsg.filter,
-                        commandType: rsg.commandType
-                    }
-                );
-
-                const documentFragment = document.createDocumentFragment()
-                filteredItems.forEach((item, index) => {
-                    const {
-                        name,
-                        command
-                    } = item;
-
-                    const selectionButton = document.createElement("button");
-
-                    if (rsg.getSelectedCommandName() === item.name) {
-                        selectionButton.classList.add("active");
-                    }
-
-                    const clickEvent = () => {
-                        rsg.selectedValues[rsg.commandType] = name;
-                        rsg.update();
-
-                        // if (document.querySelector('#auto-copy-switch').checked) {
-                        //     rsg.copyToClipboard(reverseShellCommand.innerText)
-                        // }
-                    }
-
-                    selectionButton.innerText = name;
-                    selectionButton.classList.add("list-group-item", "list-group-item-action");
-                    selectionButton.addEventListener("click", clickEvent);
-
-                    documentFragment.appendChild(selectionButton);
-                })
-
-                const listSelectionSelector = rsg.uiElements[rsg.commandType].listSelection;
-                document.querySelector(listSelectionSelector).replaceChildren(documentFragment)
-            },
-
-            updateListenerCommand: () => {
-                const privilegeWarning = document.querySelector("#port-privileges-warning");
-                let command = listenerSelect.value;
-                command = rsg.highlightParameters(command)
-                command = command.replace('{port}', rsg.getPort())
-
-                if (rsg.getPort() < 1024) {
-                    privilegeWarning.style.visibility = "visible";
-                    command = `<span class="highlighted-warning">sudo</span> ${command}`
-                } else {
-                    privilegeWarning.style.visibility = "hidden";
-                }
-
-                listenerCommand.innerHTML = command;
-            },
-
-            updateReverseShellSelection: () => {
-                document.querySelector(".list-group-item.active") ?.classList.remove("active");
-                const elements = Array.from(document.querySelectorAll(".list-group-item"));
-                const selectedElement = elements.find((item) => item.innerText === rsg.currentCommandName);
-                selectedElement?.classList.add("active");
-            },
-
-            updateReverseShellCommand: () => {
-                const command = rsg.generateReverseShellCommand();
-                const commandSelector = rsg.uiElements[rsg.commandType].command;
-                document.querySelector(commandSelector).innerHTML = command;
-            },
-
-            updateSwitchStates: () => {
-                $('#listener-advanced').collapse($('#listener-advanced-switch').prop('checked') ? 'show' :
-                    'hide')
-                $('#revshell-advanced').collapse($('#revshell-advanced-switch').prop('checked') ? 'show' :
-                    'hide')
-            }
-        }
-
-        /*
-         * Init
-         */
-        rsg.init();
-        rsg.update();
-
-        /*
-         * Event handlers/functions
-         */
-        ipInput.addEventListener("input", (e) => {
-            rsg.setState({
-                ip: e.target.value
-             })
-        });
-
-        portInput.addEventListener("input", (e) => {
-            rsg.setState({
-                port: Number(e.target.value)
-            })
-        });
-
-        listenerSelect.addEventListener("change", (e) => {
-            rsg.setState({
-                listener: e.target.value
-            })
-        });
-
-        shellSelect.addEventListener("change", (e) => {
-            rsg.setState({
-                shell: e.target.value
-            })
-        });
-
-        encodingSelect.addEventListener("change", (e) => {
-            rsg.setState({
-                encoding: e.target.value
-            })
-        });
-
-        document.querySelector('#inc-port').addEventListener('click', () => {
-            rsg.setState({
-                port: rsg.getPort() + 1
-            })
-        })
-
-        document.querySelector('#listener-advanced-switch').addEventListener('change', rsg.updateSwitchStates);
-        document.querySelector('#revshell-advanced-switch').addEventListener('change', rsg.updateSwitchStates);
-
-        setInterval(rsg.updateSwitchStates, 500) // fix switch changes in rapid succession
-
-        document.querySelector('#copy-listener').addEventListener('click', () => {
-            rsg.copyToClipboard(listenerCommand.innerText)
-        })
-
-        document.querySelector('#copy-reverse-shell-command').addEventListener('click', () => {
-            rsg.copyToClipboard(reverseShellCommand.innerText)
-        })
-
-        document.querySelector('#copy-bind-shell-command').addEventListener('click', () => {
-            rsg.copyToClipboard(bindShellCommand.innerText)
-        })
-
-        document.querySelector('#copy-msfvenom-command').addEventListener('click', () => {
-            rsg.copyToClipboard(msfVenomCommand.innerText)
-        })
-
-        // autoCopySwitch.addEventListener("change", () => {
-        //     setLocalStorage(autoCopySwitch, "auto-copy", "checked");
-        // });
-
-        // Popper tooltips
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        });
-
-        // TODO: add a random fifo for netcat mkfifo
-        //let randomId = Math.random().toString(36).substring(2, 4);
-    </script>
-
-    <script src="js/light-mode-switch.min.js"></script>
-
+    <!-- Light switch -->
+    <script src="js/light-mode-switch.js"></script>
+
+    <!-- Main js -->
+    <script src="js/script.js"></script>
 </body>
 
 </html>
