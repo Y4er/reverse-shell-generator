@@ -5,14 +5,16 @@ const portInput = document.querySelector("#port");
 const listenerSelect = document.querySelector("#listener-selection");
 const shellSelect = document.querySelector("#shell");
 // const autoCopySwitch = document.querySelector("#auto-copy-switch");
+const operatingSystemSelect = document.querySelector("#os-options");
 const encodingSelect = document.querySelector('#encoding');
+const searchBox = document.querySelector('#searchBox');
 const listenerCommand = document.querySelector("#listener-command");
 const reverseShellCommand = document.querySelector("#reverse-shell-command");
 const bindShellCommand = document.querySelector("#bind-shell-command");
 const msfVenomCommand = document.querySelector("#msfvenom-command");
 const hoaxShellCommand = document.querySelector("#hoaxshell-command");
 
-const FilterType = {
+const FilterOperatingSystemType = {
     'All': 'all',
     'Windows': 'windows',
     'Linux': 'linux',
@@ -20,7 +22,6 @@ const FilterType = {
 };
 
 const hoaxshell_listener_types = {
-	
 	"Windows CMD cURL" : "cmd-curl",
 	"PowerShell IEX" : "ps-iex",
 	"PowerShell IEX Constr Lang Mode" : "ps-iex-cm",
@@ -30,14 +31,13 @@ const hoaxshell_listener_types = {
 	"PowerShell IEX https" : "ps-iex -c /your/cert.pem -k /your/key.pem",
 	"PowerShell IEX Constr Lang Mode https" : "ps-iex-cm -c /your/cert.pem -k /your/key.pem",
 	"PowerShell Outfile https" : "ps-outfile -c /your/cert.pem -k /your/key.pem",
-	"PowerShell Outfile Constr Lang Mode https" : "ps-outfile-cm -c /your/cert.pem -k /your/key.pem"	
-	
+	"PowerShell Outfile Constr Lang Mode https" : "ps-outfile-cm -c /your/cert.pem -k /your/key.pem"
 };
 
-document.querySelector("#os-options").addEventListener("change", (event) => {
+operatingSystemSelect.addEventListener("change", (event) => {
     const selectedOS = event.target.value;
     rsg.setState({
-        filter: selectedOS,
+        filterOperatingSystem: selectedOS,
     });
 });
 
@@ -87,21 +87,16 @@ for (const button of rawLinkButtons) {
     });
 }
 
-const filterCommandData = function (data, { commandType, filter }) {
+const filterCommandData = function (data, { commandType, filterOperatingSystem = FilterOperatingSystemType.All, filterText = '' }) {
     return data.filter(item => {
+
         if (!item.meta.includes(commandType)) {
             return false;
         }
 
-        if (!filter) {
-            return true;
-        }
-
-        if (filter === FilterType.All) {
-            return true;
-        }
-
-        return item.meta.includes(filter);
+        var hasOperatingSystemMatch = (filterOperatingSystem === FilterOperatingSystemType.All) || item.meta.includes(filterOperatingSystem);
+        var hasTextMatch = item.name.toLowerCase().indexOf(filterText.toLowerCase()) >= 0;
+        return hasOperatingSystemMatch && hasTextMatch;
     });
 }
 
@@ -114,9 +109,17 @@ const fixedEncodeURIComponent = function (str) {
     });
 }
 
+const parsePortOrDefault = function (value, defaultPort = 9001) {
+    if (value === null || value === undefined) return defaultPort;
+
+    const number = Number(value);
+    const isValidPort = (Number.isSafeInteger(number) && number >= 0 && number <= 65535);
+    return isValidPort ? number : defaultPort;
+};
+
 const rsg = {
-    ip: query.get('ip') || localStorage.getItem('ip') || '10.10.10.10',
-    port: query.get('port') || localStorage.getItem('port') || 9001,
+    ip: (query.get('ip') || localStorage.getItem('ip') || '10.10.10.10').replace(/[^a-zA-Z0-9.\-]/g, ''),
+    port: parsePortOrDefault(query.get('port') || localStorage.getItem('port')),
     payload: query.get('payload') || localStorage.getItem('payload') || 'windows/x64/meterpreter/reverse_tcp',
     payload: query.get('type') || localStorage.getItem('type') || 'cmd-curl',
     shell: query.get('shell') || localStorage.getItem('shell') || rsgData.shells[0],
@@ -129,7 +132,8 @@ const rsg = {
         [CommandType.HoaxShell]: filterCommandData(rsgData.reverseShellCommands, { commandType: CommandType.HoaxShell })[0].name,
     },
     commandType: CommandType.ReverseShell,
-    filter: FilterType.All,
+    filterOperatingSystem: query.get('filterOperatingSystem') || localStorage.getItem('filterOperatingSystem') || FilterOperatingSystemType.All,
+    filterText: query.get('filterText') || localStorage.getItem('filterText') || '',
 
     uiElements: {
         [CommandType.ReverseShell]: {
@@ -170,7 +174,7 @@ const rsg = {
 
     getIP: () => rsg.ip,
 
-    getPort: () => Number(rsg.port),
+    getPort: () => parsePortOrDefault(rsg.port),
 
     getShell: () => rsg.shell,
 
@@ -347,6 +351,8 @@ const rsg = {
 
         ipInput.value = rsg.ip;
         portInput.value = rsg.port;
+        operatingSystemSelect.value = rsg.filterOperatingSystem;
+        searchBox.value = rsg.filterText;
     },
 
     updateTabList: () => {
@@ -354,12 +360,20 @@ const rsg = {
         const filteredItems = filterCommandData(
             data,
             {
-                filter: rsg.filter,
+                filterOperatingSystem:  rsg.filterOperatingSystem,
+                filterText: rsg.filterText,
                 commandType: rsg.commandType
             }
         );
 
-        const documentFragment = document.createDocumentFragment()
+        const documentFragment = document.createDocumentFragment();
+        if (filteredItems.length === 0) {
+            const emptyMessage = document.createElement("button");
+            emptyMessage.innerText = "No results found";
+            emptyMessage.classList.add("list-group-item", "list-group-item-action", "disabled");
+
+            documentFragment.appendChild(emptyMessage);
+        }
         filteredItems.forEach((item, index) => {
             const {
                 name,
@@ -448,8 +462,9 @@ ipInput.addEventListener("input", (e) => {
 });
 
 portInput.addEventListener("input", (e) => {
+    const value = e.target.value.length === 0 ? '0' : e.target.value;
     rsg.setState({
-        port: Number(e.target.value)
+        port: parsePortOrDefault(value, rsg.getPort())
     })
 });
 
@@ -468,6 +483,12 @@ shellSelect.addEventListener("change", (e) => {
 encodingSelect.addEventListener("change", (e) => {
     rsg.setState({
         encoding: e.target.value
+    })
+});
+
+searchBox.addEventListener("input", (e) => {
+    rsg.setState({
+        filterText: e.target.value
     })
 });
 
@@ -536,3 +557,4 @@ $(function () {
 
 // TODO: add a random fifo for netcat mkfifo
 //let randomId = Math.random().toString(36).substring(2, 4);
+

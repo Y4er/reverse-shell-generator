@@ -46,6 +46,17 @@
                 fill="currentColor" class="octo-body"></path>
         </svg></a>
     <style>
+        @media (max-width: 767px) {
+            #reverse-shell-selection {
+                max-height: 290px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #reverse-shell-selection {
+                max-height: 520px;
+            }
+        }
     </style>
 </head>
 
@@ -88,7 +99,7 @@
                                             <span id="ip-label" class="input-group-text">IP</span>
                                         </div>
                                         <input id="ip" type="text" class="form-control form-control-lg text-center px-1"
-                                            size="12VW" maxlength="15" aria-label="IP"
+                                            size="12VW" aria-label="IP"
                                             aria-describedby="ip-label">
                                     </div>
                                 </div>
@@ -202,51 +213,57 @@
             </li> -->
         </ul>
 
-        <div class="tab-content">
-            <!-- Reverse Shell Tab-->
-            <div class="tab-pane active" id="reverse" role="tabpanel" aria-labelledby="reverse-tab">
-                <div class="card shadow mb-5">
-                    <div class="card-body">
+        <div class="card shadow mb-5">
+            <div class="card-body">
+                <!-- Top configuration bar -->
+                <div class="d-md-flex">
+                    <!---Filters-->
+                    <label for="os-options" class="col-auto col-form-label"
+                        style="font-size:1rem">OS</label>
+                    <div class="col-auto">
+                        <select id="os-options" class="custom-select">
+                            <option class="os-item" value="all">All</option>
+                            <option class="os-item" value="linux">Linux</option>
+                            <option class="os-item" value="windows">Windows</option>
+                            <option class="os-item" value="mac">Mac</option>
+                        </select>
+                    </div>
 
-                        <!-- Show all advanced switch -->
-                        <div class="custom-control custom-switch float-right">
-                            <input id="revshell-advanced-switch" type="checkbox" class="custom-control-input" checked>
-                            <label for="revshell-advanced-switch" class="custom-control-label small pr-2 pb-1"
-                                style="padding-top:2px" data-toggle="tooltip" title="Display all advanced settings">
-                                Show Advanced
-                            </label>
-                            <img src="assets/floppy-disk-solid.svg" class="download-svg" data-toggle="tooltip" title="Download Payload">
-                        </div>
-                        <!-- /Show all advanced switch -->
+                    <label for="os-options" class="col-auto col-form-label"
+                        style="font-size:1rem">Name</label>
+                    <div class="col-auto flex-grow-1">
+                        <input type="text" id="searchBox" placeholder="Search..." class="form-control form-control-md text-left">
+                    </div>
+                    <!---/Filters-->
 
-                        <!---Filter OS-->
-                        <div class="row">
-                            <label for="os-options" class="col-auto col-form-label float-left"
-                                style="font-size:1rem">OS</label>
-                            <div class="col-auto">
-                                <select id="os-options" class="custom-select">
-                                    <option class="os-item" value="all">All</option>
-                                    <option class="os-item" value="linux">Linux</option>
-                                    <option class="os-item" value="windows">Windows</option>
-                                    <option class="os-item" value="mac">Mac</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!---/Filter OS-->
+                    <!-- Show all advanced switch -->
+                    <div class="custom-control custom-switch text-right d-flex justify-content-center align-self-center">
+                        <input id="revshell-advanced-switch" type="checkbox" class="custom-control-input" checked>
+                        <label for="revshell-advanced-switch" class="custom-control-label small pr-2 pb-1"
+                            style="padding-top:2px" data-toggle="tooltip" title="Display all advanced settings">
+                            Show Advanced
+                        </label>
+                        <img src="assets/floppy-disk-solid.svg" class="download-svg" data-toggle="tooltip" title="Download Payload">
+                    </div>
+                    <!-- /Show all advanced switch -->
+                </div>
 
+                <div class="tab-content">
+                    <!-- Reverse Shell Tab-->
+                    <div class="tab-pane active" id="reverse" role="tabpanel" aria-labelledby="reverse-tab">
                         <div class="card-text mt-4">
                             <div class="row">
 
                                 <!-- Left column: Reverse shell selection -->
                                 <div class="col-12 col-md-3">
-                                    <div id="reverse-shell-selection" class="list-group overflow-auto"
-                                        style="max-height: 520px">
+                                    <div id="reverse-shell-selection" class="list-group overflow-auto">
                                         <!-- filled by init()-->
                                     </div>
                                 </div>
 
                                 <!-- Right column -->
-                                <div class="col-12 col-md-9 d-flex flex-column">
+                                <div class="col-12 col-md-9 d-flex flex-column middle-card">
+
 
                                     <!-- Reverse Shell Command -->
                                     <div class="row flex-grow-1">
@@ -333,18 +350,11 @@
 
                             </div>
                         </div>
-                        <!-- /card-text -->
-
                     </div>
-                </div>
-            </div>
-            <!-- /Reverse Shell Tab -->
+                    <!-- /Reverse Shell Tab -->
 
-            <!-- Bind Shell Tab -->
-            <div class="tab-pane" id="bind" role="tabpanel" aria-labelledby="bind-tab">
-                <div class="card shadow mb-5">
-                    <div class="card-body">
-                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
+                    <!-- Bind Shell Tab -->
+                    <div class="tab-pane" id="bind" role="tabpanel" aria-labelledby="bind-tab">
                         <div class="card-text mt-4">
                             <div class="row">
                                 <!-- Left column: Bind selection -->
@@ -389,15 +399,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- /Bind Shell Tab -->
+                    <!-- /Bind Shell Tab -->
 
-            <!-- MSFVenom Tab -->
-            <div class="tab-pane" id="msfvenom" role="tabpanel" aria-labelledby="msfvenom-tab">
-                <div class="card shadow mb-5">
-                    <div class="card-body">
-                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
+                    <!-- MSFVenom Tab -->
+                    <div class="tab-pane" id="msfvenom" role="tabpanel" aria-labelledby="msfvenom-tab">
                         <div class="card-text mt-4">
                             <div class="row">
                                     <!-- Left column: MSFVenom selection -->
@@ -450,15 +455,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- /MSFVenom Tab -->
+                    <!-- /MSFVenom Tab -->
 
-            <!-- HoaxShell Tab -->
-            <div class="tab-pane" id="hoaxshell" role="tabpanel" aria-labelledby="hoaxshell-tab">
-                <div class="card shadow mb-5">
-                    <div class="card-body">
-                        <img src="assets/floppy-disk-solid.svg" class="download-svg float-right" data-toggle="tooltip" title="Download Payload">
+                    <!-- HoaxShell Tab -->
+                    <div class="tab-pane" id="hoaxshell" role="tabpanel" aria-labelledby="hoaxshell-tab">
                         <div class="card-text mt-4">
                             <div class="row">
                                     <!-- Left column: HoaxShell selection -->
@@ -502,10 +502,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- /hoaxshell Tab -->
                 </div>
             </div>
-            <!-- /hoaxshell Tab -->
-    </div>
+        </div>
 
     <!-- RSG data -->
     <script src="js/data.js"></script>
